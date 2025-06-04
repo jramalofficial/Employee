@@ -1,0 +1,45 @@
+﻿
+@model List<Employee.Models.Entity.Employee>
+
+<table class="table">
+    <thead class="thead-dark":>
+        <tr>
+            <th scope="col">Id</th>
+            <th scope="col">FirstName</th>
+            <th scope="col">MiddleName</th>
+            <th scope="col">LastName</th>
+            <th scope="col">DeptId</th>
+            <th scope="col">Dob</th>
+            <th scope="col">Email</th>
+            <th scope="col">Phone</th>
+            <th scope="col">StreetAddress</th>
+            <th scope="col">City</th>
+            <th scope="col">State</th>
+            <th scope="col">Country</th>
+            <th scope="col">ZipCode</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.Id</td>
+                <td>@item.FirstName</td>
+                <td>@item.MiddleName</td>
+                <td>@item.LastName</td>
+                <td>@item.DeptId</td>
+                <td>@item.Dob</td>
+                <td>@item.Email</td>
+                <td>@item.Phone</td>
+                <td>@item.StreetAddress</td>
+                <td>@item.City</td>
+                <td>@item.State</td>
+                <td>@item.Country</td>
+                <td>@item.ZipCode</td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+
+
