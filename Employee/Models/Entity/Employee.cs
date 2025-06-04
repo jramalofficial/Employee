@@ -33,6 +33,9 @@ namespace Employee.Models.Entity
 
         public string ZipCode { get; set; }
 
-       
+        public string Department { get; set; } 
+
+
+
     }
 }

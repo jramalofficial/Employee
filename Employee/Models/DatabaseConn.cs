@@ -34,15 +34,7 @@ namespace Employee.Models
                         FirstName = reader["FirstName"].ToString(),
                         MiddleName = reader["MiddleName"].ToString(),
                         LastName = reader["LastName"].ToString(),
-                        DeptId = Convert.ToInt32(reader["DeptId"]),
-                        Phone = reader["Phone"].ToString(),
-                        Dob = reader["Dob"].ToString(),
-                        Email = reader["Email"].ToString(),
-                        StreetAddress = reader["StreetAddress"].ToString(),
-                        City = reader["city"].ToString(),
-                        State = reader["State"].ToString(),
-                        Country = reader["Country"].ToString(),
-                        ZipCode = reader["ZipCode"].ToString()
+                        Department = reader["Department"].ToString()
 
 
                     });
@@ -50,6 +42,8 @@ namespace Employee.Models
                 return employees;
             }
         }
+
+        
             
 
 

@@ -5,8 +5,7 @@ using System.Web;
 using System.Web.Mvc;
 using System.Web.Routing;
 
-namespace Employee
-{
+namespace Employee { 
     public class RouteConfig
     {
         public static void RegisterRoutes(RouteCollection routes)

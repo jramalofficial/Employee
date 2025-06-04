@@ -9,12 +9,20 @@ namespace Employee.Controllers
 {
     public class EmployeeController : Controller
     {
-        // GET: Employee
+        
+        DatabaseConn emp = new DatabaseConn();
         public ActionResult Index()
         {
-            DatabaseConn emp = new DatabaseConn();
+            
             List<Employee.Models.Entity.Employee> employee=emp.GetAllEmployee();
             return View(employee);
         }
+        public JsonResult GetAll()
+        {
+            var employees = emp.GetAllEmployee(); 
+            return Json(new { data = employees }, JsonRequestBehavior.AllowGet);
+
+        }
+
     }
 }
