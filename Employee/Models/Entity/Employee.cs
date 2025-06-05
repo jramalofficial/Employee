@@ -17,7 +17,7 @@ namespace Employee.Models.Entity
 
         public int DeptId { get; set; }
 
-        public string Dob { get; set; }
+        public DateTime Dob { get; set; }
 
         public string Email { get; set; }
 

@@ -1,4 +1,5 @@
 ﻿using Employee.Models;
+using Employee.Models.Entity;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -24,5 +25,18 @@ namespace Employee.Controllers
 
         }
 
+        public JsonResult GetAllDepartment()
+        {
+            var department = emp.GetDepartments();
+            return Json(new { data = department },JsonRequestBehavior.AllowGet);
+        }
+
+        public ActionResult Add(Employee.Models.Entity.Employee employee)
+        {
+            var db = new DatabaseConn();
+            db.SaveEmployee(employee);
+
+            return RedirectToAction("Index");
+        }
     }
 }

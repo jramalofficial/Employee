@@ -1,7 +1,9 @@
 ﻿@{
     ViewBag.Title = "Employee List";
     Layout = null; // Remove this line if you're using a shared layout
+    
 }
+
 
 <!DOCTYPE html>
 <html>
@@ -9,15 +11,26 @@
     <meta charset="utf-8" />
     <title>Employee List</title>
 
+
+
     <link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.min.css" />
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
     <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
+
+
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" />
+
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
 </head>
 <body>
+    @Html.Partial("_AddEmployeeModal");
+
     <div class="container">
         <h2>Employees</h2>
+        <button class="btn btn-success mb-3" data-toggle="modal" data-target="#addEmployeeModal"> ADD Employee</button>
         <table id="employeeTable" class="display">
             <thead>
                 <tr>
@@ -26,14 +39,16 @@
                     <th>Middle Name</th>
                     <th>Last Name</th>
                     <th>Department</th>
-                   
+                    <th>Actions</th>
+
                 </tr>
             </thead>
             <tbody>
-                
             </tbody>
         </table>
     </div>
+
+
 
     <script>
         $(document).ready(function () {
@@ -48,10 +63,21 @@
                     { "data": "FirstName" },
                     { "data": "MiddleName" },
                     { "data": "LastName" },
-                    { "data": "Department" }
+                    { "data": "Department" },
+                    {
+                        "data": null,
+                        "render": function (data, type, row) {
+                            return `<button class= 'btn btn-sm btn-primary' onclick='editEmployee(${row.Id})' > Edit</button>`;
+                        }
+
+                    }
                 ]
             });
         });
+        function editEmployee(id) {
+            alert("Edit Employee with Id" + id);
+        }
+
     </script>
 </body>
 </html>
