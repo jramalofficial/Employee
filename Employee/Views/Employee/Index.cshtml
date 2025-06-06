@@ -19,7 +19,6 @@
 
     <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
 
-
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" />
 
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
@@ -39,7 +38,8 @@
                     <th>Middle Name</th>
                     <th>Last Name</th>
                     <th>Department</th>
-                    <th>Actions</th>
+                    <th>Update</th>
+                    <th>Delete</th>
 
                 </tr>
             </thead>
@@ -51,6 +51,15 @@
 
 
     <script>
+        $(document).on('click', '[data-target="#addEmployeeModal"]', function () {
+            $('#addEmployeeForm')[0].reset();
+            $('#addEmployeeForm').attr('action', '/Employee/Add');
+            $('#saveEmployeeBtn').text('Update');
+            $('#employeeId').val('');
+            $('#departmentName').val('');
+
+        });
+
         $(document).ready(function () {
             $('#employeeTable').DataTable({
                 "ajax": {
@@ -63,21 +72,82 @@
                     { "data": "FirstName" },
                     { "data": "MiddleName" },
                     { "data": "LastName" },
-                    { "data": "Department" },
+                    { "data": "DepartmentName" },
                     {
                         "data": null,
                         "render": function (data, type, row) {
                             return `<button class= 'btn btn-sm btn-primary' onclick='editEmployee(${row.Id})' > Edit</button>`;
                         }
-
+        
+                    },
+                    {
+                        "data": null,
+                        "render": function (data, type, row) {
+                            return  `<button class='btn btn-sm btn-primary' onclick='deleteEmployee(${row.Id})'>Delete</button>`
+                        }
                     }
                 ]
             });
         });
-        function editEmployee(id) {
-            alert("Edit Employee with Id" + id);
+
+        function editEmployee(Empid) {
+            $.ajax(
+                {
+                    url: '/Employee/EditEmployee',
+                    type: 'GET',
+                    data: { id: Empid },
+                    success: function (response) {
+                        const emp = response.data;
+
+                        $('#employeeId').val(emp.Id);
+                        $('#firstName').val(emp.FirstName);
+                        $('#middleName').val(emp.MiddleName);
+                        $('#lastName').val(emp.LastName);
+                        
+                        $('#dob').val(emp.Dob);
+                        
+                        $('#email').val(emp.Email);
+                        $('#phone').val(emp.Phone);
+                        $('#streetAddress').val(emp.StreetAddress);
+                        $('#city').val(emp.City);
+                        $('#state').val(emp.State);
+                        $('#country').val(emp.Country);
+                        $('#zipCode').val(emp.ZipCode);
+
+                        
+
+                        $('#addEmployeeForm').attr('action', '/Employee/Update');
+                        $('#saveEmployeeBtn').text('Update Employee');
+                        
+                        $('#addEmployeeModal').modal('show');
+                        
+                    },
+
+                    error: function() {
+                        alert("Cant fetch data");
+                    }
+
+                }
+            );
         }
 
+        function deleteEmployee(Empid) {
+            $.ajax({
+                url: '/Employee/Delete',
+                type: 'POST',
+                data: { id: Empid },
+                success: function (response) {
+                    if (response.success) {
+                        alert("Employee deleted successfully");
+                        $('#employeeTable').DataTable().ajax.reload();
+                    }
+                },
+                error: function () {
+                    alert("Failed to delete employee");
+                }
+            });
+        }
+        
     </script>
 </body>
 </html>

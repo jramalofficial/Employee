@@ -11,6 +11,8 @@ using System.Web.Mvc;
 using System.Web.UI.WebControls;
 using Employee.Models.Entity;
 
+
+
 namespace Employee.Models
 {
     public class DatabaseConn
@@ -34,11 +36,11 @@ namespace Employee.Models
                 {
                     employees.Add(new Employee.Models.Entity.Employee
                     {
-                        Id = Convert.ToInt32(reader["ID"]),
+                        Id = Convert.ToInt32(reader["Id"]),
                         FirstName = reader["FirstName"].ToString(),
                         MiddleName = reader["MiddleName"].ToString(),
                         LastName = reader["LastName"].ToString(),
-                        Department = reader["Department"].ToString()
+                        DepartmentName = reader["DepartmentName"].ToString()
 
 
                     });
@@ -65,7 +67,7 @@ namespace Employee.Models
                         departments.Add(new Department
                         {
                             Id = Convert.ToInt32(reader["id"]),
-                            DepartmentName = reader["Department"].ToString()
+                            DepartmentName = reader["DepartmentName"].ToString()
                         });
                     }
                 }
@@ -106,6 +108,94 @@ namespace Employee.Models
 
         }
 
+        public Employee.Models.Entity.Employee Edit(int id)
+        {
+            Employee.Models.Entity.Employee employee = null;
+            using (SqlConnection con = new SqlConnection(ConnectionStrings))
+            {
+                SqlCommand cmd = new SqlCommand("selectEmployeeWithId",con);
+                cmd.CommandType=CommandType.StoredProcedure;
+
+                cmd.Parameters.AddWithValue("@Id", id);
+                con.Open();
+                using (SqlDataReader reader = cmd.ExecuteReader())
+                {
+                    
+                    while (reader.Read())
+                    {
+                        employee = new Employee.Models.Entity.Employee
+                        {
+                            Id = Convert.ToInt32(reader["Id"]),
+                            FirstName = reader["FirstName"].ToString(),
+                            MiddleName = reader["MiddleName"].ToString(),
+                            LastName = reader["LastName"].ToString(),
+                            DeptId = Convert.ToInt32(reader["Id"]),
+                            DepartmentName = reader["DepartmentName"].ToString(),
+                            Dob = Convert.ToDateTime(reader["Dob"]),
+                            Email = reader["Email"].ToString(),
+                            Phone = reader["Phone"].ToString(),
+                            StreetAddress = reader["StreetAddress"].ToString(),
+                            City = reader["City"].ToString(),
+                            State = reader["State"].ToString(),
+                            Country = reader["Country"].ToString(),
+                            ZipCode = reader["ZipCode"].ToString()
+
+
+                        };
+                    }
+                }
+
+            }
+            return employee;
+
+        }
+
+        public void UpdateEmployee(Employee.Models.Entity.Employee employee)
+        {
+            using(SqlConnection con=new SqlConnection(ConnectionStrings))
+            {
+                SqlCommand cmd = new SqlCommand("updateEmployee", con);
+
+                cmd.CommandType = CommandType.StoredProcedure;
+
+                cmd.Parameters.AddWithValue("@Id",employee.Id);
+                cmd.Parameters.AddWithValue("@FirstName",employee.FirstName);
+                cmd.Parameters.AddWithValue("@MiddleName", employee.MiddleName);
+                cmd.Parameters.AddWithValue("@LastName", employee.LastName);
+                cmd.Parameters.AddWithValue("@DeptId", employee.DeptId);
+                cmd.Parameters.AddWithValue("@Dob", employee.Dob);
+                cmd.Parameters.AddWithValue("@Email", employee.Email);
+                cmd.Parameters.AddWithValue("@Phone", employee.Phone);
+                cmd.Parameters.AddWithValue("@StreetAddress", employee.StreetAddress);
+                cmd.Parameters.AddWithValue("@City", employee.City);
+                cmd.Parameters.AddWithValue("@State", employee.State);
+                cmd.Parameters.AddWithValue("@Country", employee.Country);
+                cmd.Parameters.AddWithValue("@ZipCode", employee.ZipCode);
+                
+
+                con.Open();
+                cmd.ExecuteNonQuery();
+                
+                
+            }
+
+            
+        }
+
+        public void DeleteEmployee(int employeeId)
+        {
+            using (SqlConnection con = new SqlConnection(ConnectionStrings))
+            {
+                SqlCommand cmd = new SqlCommand("deleteEmployee",con);
+                cmd.CommandType= CommandType.StoredProcedure;
+
+                cmd.Parameters.AddWithValue("@Id", employeeId);
+
+                con.Open();
+                cmd.ExecuteNonQuery();
+
+            }
+        }
 
 
 

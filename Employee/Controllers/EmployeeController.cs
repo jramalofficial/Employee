@@ -38,5 +38,29 @@ namespace Employee.Controllers
 
             return RedirectToAction("Index");
         }
+
+        public JsonResult EditEmployee(int id)
+        {
+            var db=new DatabaseConn();
+            Employee.Models.Entity.Employee emp=db.Edit(id);
+
+            return Json(new { data=emp},JsonRequestBehavior.AllowGet);
+        }
+
+        public ActionResult Update(Employee.Models.Entity.Employee employee)
+        {
+            var db = new DatabaseConn();
+            db.UpdateEmployee(employee);
+            return RedirectToAction("Index");
+        }
+
+        public JsonResult Delete(int id)
+        {
+            var db = new DatabaseConn();
+            db.DeleteEmployee(id);
+            return Json(new {success=true},JsonRequestBehavior.AllowGet);
+        }
     }
+
+
 }

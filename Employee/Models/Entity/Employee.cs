@@ -33,7 +33,7 @@ namespace Employee.Models.Entity
 
         public string ZipCode { get; set; }
 
-        public string Department { get; set; } 
+        public string DepartmentName { get; set; } 
 
 
 
