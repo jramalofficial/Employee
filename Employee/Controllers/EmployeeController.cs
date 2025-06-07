@@ -13,10 +13,8 @@ namespace Employee.Controllers
         
         DatabaseConn emp = new DatabaseConn();
         public ActionResult Index()
-        {
-            
-            List<Employee.Models.Entity.Employee> employee=emp.GetAllEmployee();
-            return View(employee);
+        {      
+            return View();
         }
         public JsonResult GetAll()
         {
