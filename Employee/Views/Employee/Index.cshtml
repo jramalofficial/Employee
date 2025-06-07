@@ -54,7 +54,7 @@
         $(document).on('click', '[data-target="#addEmployeeModal"]', function () {
             $('#addEmployeeForm')[0].reset();
             $('#addEmployeeForm').attr('action', '/Employee/Add');
-            $('#saveEmployeeBtn').text('Update');
+            $('#saveEmployeeBtn').text('Save');
             $('#employeeId').val('');
             $('#departmentName').val('');
 
@@ -97,15 +97,14 @@
                     type: 'GET',
                     data: { id: Empid },
                     success: function (response) {
+                        
                         const emp = response.data;
-
+                        
                         $('#employeeId').val(emp.Id);
                         $('#firstName').val(emp.FirstName);
                         $('#middleName').val(emp.MiddleName);
-                        $('#lastName').val(emp.LastName);
-                        
-                        $('#dob').val(emp.Dob);
-                        
+                        $('#lastName').val(emp.LastName);            
+                        $('#dob').val(emp.Dob);                    
                         $('#email').val(emp.Email);
                         $('#phone').val(emp.Phone);
                         $('#streetAddress').val(emp.StreetAddress);
@@ -114,12 +113,11 @@
                         $('#country').val(emp.Country);
                         $('#zipCode').val(emp.ZipCode);
 
-                        
-
                         $('#addEmployeeForm').attr('action', '/Employee/Update');
                         $('#saveEmployeeBtn').text('Update Employee');
-                        
                         $('#addEmployeeModal').modal('show');
+
+                        loadDepartmentWithId(emp.DeptId);                        
                         
                     },
 

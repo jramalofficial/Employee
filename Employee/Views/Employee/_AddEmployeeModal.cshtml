@@ -76,7 +76,7 @@
     </div>
 </div>
 <script>
-    function loadDepartment(DeptId = null) {
+    $(document).ready(function () {
         $.ajax({
             url: '/Employee/GetAllDepartment',
             type: 'GET',
@@ -88,17 +88,20 @@
                         text: item.DepartmentName
                     }));
                 });
-                if (DeptId) {
-                    depSelect.val(DeptId)
-                }
             }
-        });   
-    };
+        });
+    });
+
+    function loadDepartmentWithId(DeptId) {
+        var deptSelect = $('#deptId');
+        deptSelect.val(DeptId);
+    }
+   
+
+
 
         
-    $(document).ready(function () {
-        loadDepartment();
-    });
+   
 </script>
 
 
