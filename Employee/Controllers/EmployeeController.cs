@@ -82,9 +82,21 @@ namespace Employee.Controllers
         [HttpPost]
         public ActionResult Update(Employee.Models.Entity.Employee employee)
         {
-            var db = new DatabaseConn();
-            db.UpdateEmployee(employee);
-            return RedirectToAction("Index");
+            if (ModelState.IsValid)
+            {
+                var db = new DatabaseConn();
+                db.UpdateEmployee(employee);
+                return Json(new { success = true });
+            }
+            else
+            {
+                var errors = ModelState
+                    .Where(x => x.Value.Errors.Count > 0)
+                    .Select(x => new { Field = x.Key, Error = x.Value.Errors.First().ErrorMessage })
+                    .ToList();
+
+                return Json(new { success = false, errors });
+            }
         }
         [HttpPost]
         public JsonResult Delete(int id)

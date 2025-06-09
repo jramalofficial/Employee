@@ -153,7 +153,7 @@ namespace Employee.Models
 
                 cmd.Parameters.AddWithValue("@Id",employee.Id);
                 cmd.Parameters.AddWithValue("@FirstName",employee.FirstName);
-                cmd.Parameters.AddWithValue("@MiddleName", employee.MiddleName);
+                cmd.Parameters.AddWithValue("@MiddleName", employee.MiddleName ?? (object)DBNull.Value);
                 cmd.Parameters.AddWithValue("@LastName", employee.LastName);
                 cmd.Parameters.AddWithValue("@DeptId", employee.DeptId);
                 cmd.Parameters.AddWithValue("@Dob", employee.Dob);

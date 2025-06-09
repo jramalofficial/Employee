@@ -113,11 +113,16 @@
                         $('#country').val(emp.Country);
                         $('#zipCode').val(emp.ZipCode);
 
-                        $('#addEmployeeForm').attr('action', '/Employee/Update');
+
+                        loadDepartmentWithId(emp.DeptId); 
+
+                         
+                        $('#addEmployeeForm').attr('action','/Employee/Update')
+
                         $('#saveEmployeeBtn').text('Update Employee');
                         $('#addEmployeeModal').modal('show');
 
-                        loadDepartmentWithId(emp.DeptId);                        
+                                              
                         
                     },
                         
