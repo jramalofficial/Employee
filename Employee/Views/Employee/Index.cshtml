@@ -1,9 +1,7 @@
 ﻿@{
-    ViewBag.Title = "Employee List";
-    Layout = null; // Remove this line if you're using a shared layout
-    
-}
+    Layout = null;
 
+}
 
 <!DOCTYPE html>
 <html>
@@ -56,9 +54,10 @@
             $('#addEmployeeForm').attr('action', '/Employee/Add');
             $('#saveEmployeeBtn').text('Save');
             $('#employeeId').val('');
-            $('#departmentName').val('');
 
         });
+        
+
 
         $(document).ready(function () {
             $('#employeeTable').DataTable({
@@ -103,8 +102,9 @@
                         $('#employeeId').val(emp.Id);
                         $('#firstName').val(emp.FirstName);
                         $('#middleName').val(emp.MiddleName);
-                        $('#lastName').val(emp.LastName);            
-                        $('#dob').val(emp.Dob);                    
+                        $('#lastName').val(emp.LastName);           
+                        $('#dob').val(emp.Dob);  
+      
                         $('#email').val(emp.Email);
                         $('#phone').val(emp.Phone);
                         $('#streetAddress').val(emp.StreetAddress);
@@ -120,7 +120,7 @@
                         loadDepartmentWithId(emp.DeptId);                        
                         
                     },
-
+                        
                     error: function() {
                         alert("Cant fetch data");
                     }

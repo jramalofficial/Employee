@@ -1,9 +1,6 @@
 ﻿using Employee.Models;
-using Employee.Models.Entity;
-using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Web;
+using System.Web.Configuration;
 using System.Web.Mvc;
 
 namespace Employee.Controllers
@@ -18,7 +15,8 @@ namespace Employee.Controllers
         }
         public JsonResult GetAll()
         {
-            var employees = emp.GetAllEmployee(); 
+            
+            var employees = emp.GetAllEmployee();
             return Json(new { data = employees }, JsonRequestBehavior.AllowGet);
 
         }
@@ -29,29 +27,66 @@ namespace Employee.Controllers
             return Json(new { data = department },JsonRequestBehavior.AllowGet);
         }
 
+        [HttpPost]
         public ActionResult Add(Employee.Models.Entity.Employee employee)
         {
-            var db = new DatabaseConn();
-            db.SaveEmployee(employee);
+            if (ModelState.IsValid)
+            {
+                emp.SaveEmployee(employee);  
+                return Json(new { success = true });
+            }
+            else
+            {
+                
+                var errors = ModelState
+                    .Where(x => x.Value.Errors.Count > 0)
+                    .Select(x => new { Field = x.Key, Error = x.Value.Errors.First().ErrorMessage })
+                    .ToList();
 
-            return RedirectToAction("Index");
+                return Json(new { success = false, errors });
+            }
         }
-
+        
         public JsonResult EditEmployee(int id)
         {
             var db=new DatabaseConn();
             Employee.Models.Entity.Employee emp=db.Edit(id);
+            
+            
+            string formattedDob = emp.Dob.ToString("yyyy-MM-dd");
+            
+            var result = new
+            {
+                data = new
+                {
+                    emp.Id,
+                    emp.FirstName,
+                    emp.MiddleName,
+                    emp.LastName,
+                    Dob = formattedDob, 
+                    emp.Email,
+                    emp.Phone,
+                    emp.StreetAddress,
+                    emp.City,
+                    emp.State,
+                    emp.Country,
+                    emp.ZipCode,
+                    emp.DeptId
+                }
+            };
+            return Json(result, JsonRequestBehavior.AllowGet);
 
-            return Json(new { data=emp},JsonRequestBehavior.AllowGet);
+            //return Json(new { data=em p},JsonRequestBehavior.AllowGet);
         }
 
+        [HttpPost]
         public ActionResult Update(Employee.Models.Entity.Employee employee)
         {
             var db = new DatabaseConn();
             db.UpdateEmployee(employee);
             return RedirectToAction("Index");
         }
-
+        [HttpPost]
         public JsonResult Delete(int id)
         {
             var db = new DatabaseConn();

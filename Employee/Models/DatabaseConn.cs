@@ -80,14 +80,14 @@ namespace Employee.Models
                     cmd.CommandType=CommandType.StoredProcedure;
 
                     cmd.Parameters.AddWithValue("@FirstName", employee.FirstName);
-                    cmd.Parameters.AddWithValue("@MiddleName", employee.MiddleName);
+                    cmd.Parameters.AddWithValue("@MiddleName", employee.MiddleName ?? (object)DBNull.Value);
                     cmd.Parameters.AddWithValue("@LastName", employee.LastName);
                     cmd.Parameters.AddWithValue("@DeptId", employee.DeptId);
                     cmd.Parameters.AddWithValue("@Dob", employee.Dob);
                     cmd.Parameters.AddWithValue("@Email", employee.Email);
                     cmd.Parameters.AddWithValue("@Phone", employee.Phone);
                     cmd.Parameters.AddWithValue("@StreetAddress", employee.StreetAddress);
-                    cmd.Parameters.AddWithValue("@City", employee.City);
+                    cmd.Parameters.AddWithValue("@City", employee.City );
                     cmd.Parameters.AddWithValue("@State", employee.State);
                     cmd.Parameters.AddWithValue("@Country", employee.Country);
                     cmd.Parameters.AddWithValue("@ZipCode", employee.ZipCode);
