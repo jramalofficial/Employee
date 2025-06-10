@@ -11,39 +11,44 @@ namespace Employee.Controllers
     public class EmployeeController : Controller
     {
         
-        DatabaseConn emp = new DatabaseConn();
+        DatabaseConn db = new DatabaseConn();
         public ActionResult Index()
         {      
             return View();
         }
+
+
+        [HttpGet]
         public JsonResult GetAll()
         {
             try
             {
-                var employees = emp.GetAllEmployee();
+                var employees = db.GetAllEmployee();
                 return Json(new { success=true, data = employees }, JsonRequestBehavior.AllowGet);
             }
             catch (Exception ex) 
             {
                 return Json(new { success = false, message = ex.Message }, JsonRequestBehavior.AllowGet);
             }
-
         }
 
+
+        [HttpGet]
         public JsonResult GetAllDepartment()
         {
             try
             {
-                var department = emp.GetDepartments();
+                var department = db.GetDepartments();
                 return Json(new { success=true,data = department }, JsonRequestBehavior.AllowGet);
             }
             catch (Exception ex)
             {
                 return Json(new { success = false, message=ex.Message }, JsonRequestBehavior.AllowGet);
-            }
-            
-      
+            }    
         }
+
+
+
 
         [HttpPost]
         public ActionResult Add(Employee.Models.Entity.Employee employee)
@@ -53,13 +58,12 @@ namespace Employee.Controllers
                 if (ModelState.IsValid)
                 {
 
-                    emp.SaveEmployee(employee);
+                    db.SaveEmployee(employee);
                     return Json(new { success = true });
 
                 }
                 else
                 {
-
                     var errors = ModelState
                         .Where(x => x.Value.Errors.Count > 0)
                         .Select(x => new { Field = x.Key, Error = x.Value.Errors.First().ErrorMessage })
@@ -67,24 +71,21 @@ namespace Employee.Controllers
 
                     return Json(new { success = false, errors });
                 }
-
             }
             catch (Exception ex)
             {
                 return Json(new { success = false, message = ex.Message });
             }
         }
-        
+
+
+
+        [HttpGet]
         public JsonResult EditEmployee(int id)
         {
             try
             {
-                var db = new DatabaseConn();
-                Employee.Models.Entity.Employee emp = db.Edit(id);
-
-
-                string formattedDob = emp.Dob.ToString("yyyy-MM-dd");
-
+                Employee.Models.Entity.Employee emp = db.Edit(id);             
                 var result = new
                 {
                     data = new
@@ -93,7 +94,7 @@ namespace Employee.Controllers
                         emp.FirstName,
                         emp.MiddleName,
                         emp.LastName,
-                        Dob = formattedDob,
+                        Dob = emp.Dob.ToString("yyyy-MM-dd"),
                         emp.Email,
                         emp.Phone,
                         emp.StreetAddress,
@@ -111,11 +112,10 @@ namespace Employee.Controllers
             {
                 return Json(new {success=false,message=ex.Message}, JsonRequestBehavior.AllowGet);
             }
-                
-
-                //return Json(new { data=emp},JsonRequestBehavior.AllowGet);
-            
+                //return Json(new { data=emp},JsonRequestBehavior.AllowGet);            
         }
+
+
 
         [HttpPost]
         public ActionResult Update(Employee.Models.Entity.Employee employee)
@@ -124,11 +124,8 @@ namespace Employee.Controllers
             {
                 if (ModelState.IsValid)
                 {
-
-
-                    emp.UpdateEmployee(employee);
+                    db.UpdateEmployee(employee);
                     return Json(new { success = true });
-
                 }
                 else
                 {
@@ -146,22 +143,22 @@ namespace Employee.Controllers
                 return Json(new { success = false, message = ex.Message});
             }
         }
+
+
+
+
         [HttpPost]
         public JsonResult Delete(int id)
         {
             try
             {
-                emp.DeleteEmployee(id);
+                db.DeleteEmployee(id);
                 return Json(new { success = true }, JsonRequestBehavior.AllowGet);
             }
             catch(Exception ex)
             {
                 return Json(new { success = false, message = ex.Message });
-            }
-            
-            
+            }                      
         }
     }
-
-
 }

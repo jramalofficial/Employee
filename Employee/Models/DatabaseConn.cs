@@ -21,20 +21,14 @@ namespace Employee.Models
 
             try
             {
-
                 using (SqlConnection connection = new SqlConnection(ConnectionStrings))
                 {
-
-
                     using (SqlCommand cmd = new SqlCommand("selectTable", connection))
                     {
                         cmd.CommandType = System.Data.CommandType.StoredProcedure;
-
                         connection.Open();
-
                         using (SqlDataReader reader = cmd.ExecuteReader())
                         {
-
                             while (reader.Read())
                             {
                                 employees.Add(new Employee.Models.Entity.Employee
@@ -44,15 +38,10 @@ namespace Employee.Models
                                     MiddleName = reader["MiddleName"].ToString(),
                                     LastName = reader["LastName"].ToString(),
                                     DepartmentName = reader["DepartmentName"].ToString()
-
-
                                 });
                             }
-
                         }
                     }
-
-
                 }
             }
             catch (SqlException ex)
@@ -60,13 +49,10 @@ namespace Employee.Models
                 throw new Exception("failed to fetch employee list",ex);
             }
                 return employees;
-
-
-          
-            
-
-
         }
+
+
+
         public List<Department> GetDepartments()
         {
             List<Department> departments = new List<Department>();
@@ -76,11 +62,9 @@ namespace Employee.Models
                 {
                     using (SqlCommand cmd = new SqlCommand("selectDepartments", con))
                     {
-
                         con.Open();
                         using (SqlDataReader reader = cmd.ExecuteReader())
                         {
-
                             while (reader.Read())
                             {
                                 departments.Add(new Department
@@ -90,25 +74,20 @@ namespace Employee.Models
                                 });
                             }
                         }
-
                     }
-                }
-                
+                }            
             }
             catch(SqlException ex)
             {
                 throw new Exception("failed to get department", ex);
             }
-
             return departments;
-
-          
-
         }
         
+
+
         public void SaveEmployee(Employee.Models.Entity.Employee employee)
         {
-
             try
             {
                 using (SqlConnection con = new SqlConnection(ConnectionStrings))
@@ -129,27 +108,24 @@ namespace Employee.Models
                         cmd.Parameters.AddWithValue("@State", employee.State);
                         cmd.Parameters.AddWithValue("@Country", employee.Country);
                         cmd.Parameters.AddWithValue("@ZipCode", employee.ZipCode);
-
-
                         con.Open();
                         cmd.ExecuteNonQuery();
                     }
-
                 }
             }
             catch (SqlException ex)
             {
                 throw new Exception("Database Error while adding employee", ex);
             }
-
-
         }
+
+
 
         public Employee.Models.Entity.Employee Edit(int id)
         {
             Employee.Models.Entity.Employee employee = null;
-            
-                
+            try
+            {
                 using (SqlConnection con = new SqlConnection(ConnectionStrings))
                 {
                     using (SqlCommand cmd = new SqlCommand("selectEmployeeWithId", con))
@@ -160,7 +136,6 @@ namespace Employee.Models
                         con.Open();
                         using (SqlDataReader reader = cmd.ExecuteReader())
                         {
-
                             while (reader.Read())
                             {
                                 employee = new Employee.Models.Entity.Employee
@@ -178,18 +153,18 @@ namespace Employee.Models
                                     State = reader["State"].ToString(),
                                     Country = reader["Country"].ToString(),
                                     ZipCode = reader["ZipCode"].ToString()
-
-
                                 };
                             }
                         }
                     }
 
                 }
-                return employee;
-
-            
-
+            }
+            catch(SqlException ex)
+            {
+                throw new Exception("Error occured while fetch details of employee", ex);
+            }
+                return employee;         
         }
 
         public void UpdateEmployee(Employee.Models.Entity.Employee employee)
@@ -200,7 +175,6 @@ namespace Employee.Models
                 {
                     using (SqlCommand cmd = new SqlCommand("updateEmployee", con))
                     {
-
                         cmd.CommandType = CommandType.StoredProcedure;
 
                         cmd.Parameters.AddWithValue("@Id", employee.Id);
@@ -216,22 +190,19 @@ namespace Employee.Models
                         cmd.Parameters.AddWithValue("@State", employee.State);
                         cmd.Parameters.AddWithValue("@Country", employee.Country);
                         cmd.Parameters.AddWithValue("@ZipCode", employee.ZipCode);
-
-
                         con.Open();
                         cmd.ExecuteNonQuery();
                     }
-
-
                 }
-
             }
             catch (Exception ex)
             {
                 throw new Exception("Database Error while Updating employee", ex);
-            }
-            
+            }            
         }
+
+
+
 
         public void DeleteEmployee(int employeeId)
         {
@@ -244,7 +215,6 @@ namespace Employee.Models
                         cmd.CommandType = CommandType.StoredProcedure;
 
                         cmd.Parameters.AddWithValue("@Id", employeeId);
-
                         con.Open();
                         cmd.ExecuteNonQuery();
                     }
@@ -256,15 +226,6 @@ namespace Employee.Models
 
             }
         }
-
-
-
-
-
-
-
-
-
     }
 }
 
