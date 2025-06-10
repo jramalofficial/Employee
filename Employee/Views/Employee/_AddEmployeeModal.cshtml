@@ -1,5 +1,4 @@
-﻿@*<script src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>*@
-@*<script src="~/Scripts/jquery.validate.min.js"></script>*@
+﻿
 
 
 
@@ -96,7 +95,8 @@
             url: '/Employee/GetAllDepartment',
             type: 'GET',
             success: function (response) {
-                
+                if (response.success)
+                {
                     var deptSelect = $('#deptId');
                     $.each(response.data, function (i, item) {
                         deptSelect.append($('<option>', {
@@ -104,10 +104,16 @@
                             text: item.DepartmentName
                         }));
                     });
-               
-               
+                }
+                else
+                {
+                    alert("Error :" + response.message);
+                }            
+        
             }
         });
+
+
         $('#addEmployeeForm').submit(function (e) {
             e.preventDefault();
 

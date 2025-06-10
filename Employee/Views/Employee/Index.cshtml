@@ -63,7 +63,19 @@
                 "ajax": {
                     "url": "/Employee/GetAll",
                     "type": "GET",
-                    "datatype": "json"
+                    "datatype": "json",
+                    "dataSrc": function (response) {
+                        if (response.success) {
+                            return response.data;
+                        }
+                        else {
+                            alert("Error:" + response.message);
+                            return [];
+                        }
+                    },
+                    "error": function () {
+                        alert("An unexpected error occured during loading data");
+                    }
                 },
                 "columns": [
                     { "data": "Id" },
@@ -96,36 +108,39 @@
                     type: 'GET',
                     data: { id: Empid },
                     success: function (response) {
-                        
-                        const emp = response.data;
-                        
-                        $('#employeeId').val(emp.Id);
-                        $('#firstName').val(emp.FirstName);
-                        $('#middleName').val(emp.MiddleName);
-                        $('#lastName').val(emp.LastName);           
-                        $('#dob').val(emp.Dob);  
-      
-                        $('#email').val(emp.Email);
-                        $('#phone').val(emp.Phone);
-                        $('#streetAddress').val(emp.StreetAddress);
-                        $('#city').val(emp.City);
-                        $('#state').val(emp.State);
-                        $('#country').val(emp.Country);
-                        $('#zipCode').val(emp.ZipCode);
+                        if (response.success) {
+                            const emp = response.data;
+
+                            $('#employeeId').val(emp.Id);
+                            $('#firstName').val(emp.FirstName);
+                            $('#middleName').val(emp.MiddleName);
+                            $('#lastName').val(emp.LastName);
+                            $('#dob').val(emp.Dob);
+
+                            $('#email').val(emp.Email);
+                            $('#phone').val(emp.Phone);
+                            $('#streetAddress').val(emp.StreetAddress);
+                            $('#city').val(emp.City);
+                            $('#state').val(emp.State);
+                            $('#country').val(emp.Country);
+                            $('#zipCode').val(emp.ZipCode);
 
 
-                        loadDepartmentWithId(emp.DeptId); 
+                            loadDepartmentWithId(emp.DeptId);
 
-                         
-                        $('#addEmployeeForm').attr('action','/Employee/Update')
 
-                        $('#saveEmployeeBtn').text('Update Employee');
-                        $('#addEmployeeModal').modal('show');
+                            $('#addEmployeeForm').attr('action', '/Employee/Update')
 
-                                              
-                        
-                    },
-                        
+                            $('#saveEmployeeBtn').text('Update Employee');
+                            $('#addEmployeeModal').modal('show');
+
+
+
+                        }
+                        else {
+                            alert("Error: " + response.message);
+                        }
+                    },         
                     error: function() {
                         alert("Cant fetch data");
                     }
@@ -142,7 +157,6 @@
                 success: function (response) {
                     
                     if (response.success) {
-                        alert("Employee deleted successfully");
                         $('#employeeTable').DataTable().ajax.reload();
                     }
                     else {

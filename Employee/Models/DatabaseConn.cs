@@ -19,8 +19,9 @@ namespace Employee.Models
         {
             List<Employee.Models.Entity.Employee> employees = new List<Employee.Models.Entity.Employee>();
 
-           
-                
+            try
+            {
+
                 using (SqlConnection connection = new SqlConnection(ConnectionStrings))
                 {
 
@@ -50,9 +51,14 @@ namespace Employee.Models
 
                         }
                     }
-                    
+
 
                 }
+            }
+            catch (SqlException ex)
+            {
+                throw new Exception("failed to fetch employee list",ex);
+            }
                 return employees;
 
 
@@ -64,8 +70,8 @@ namespace Employee.Models
         public List<Department> GetDepartments()
         {
             List<Department> departments = new List<Department>();
-           
-
+            try
+            {
                 using (SqlConnection con = new SqlConnection(ConnectionStrings))
                 {
                     using (SqlCommand cmd = new SqlCommand("selectDepartments", con))
@@ -87,7 +93,14 @@ namespace Employee.Models
 
                     }
                 }
-                return departments;
+                
+            }
+            catch(SqlException ex)
+            {
+                throw new Exception("failed to get department", ex);
+            }
+
+            return departments;
 
           
 
@@ -239,7 +252,7 @@ namespace Employee.Models
             }
             catch (SqlException ex)
             {
-                throw;
+                throw new Exception("Error occured while delete from database", ex);
 
             }
         }

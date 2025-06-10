@@ -1,4 +1,5 @@
 ﻿using Employee.Models;
+using Employee.Models.Entity;
 using System;
 using System.Data.SqlClient;
 using System.Linq;
@@ -17,18 +18,29 @@ namespace Employee.Controllers
         }
         public JsonResult GetAll()
         {
-
-            
-            var employees = emp.GetAllEmployee();
-            return Json(new { data = employees }, JsonRequestBehavior.AllowGet);
+            try
+            {
+                var employees = emp.GetAllEmployee();
+                return Json(new { success=true, data = employees }, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex) 
+            {
+                return Json(new { success = false, message = ex.Message }, JsonRequestBehavior.AllowGet);
+            }
 
         }
 
         public JsonResult GetAllDepartment()
         {
-          
+            try
+            {
                 var department = emp.GetDepartments();
-                return Json(new { data = department }, JsonRequestBehavior.AllowGet);
+                return Json(new { success=true,data = department }, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
+                return Json(new { success = false, message=ex.Message }, JsonRequestBehavior.AllowGet);
+            }
             
       
         }
@@ -65,7 +77,8 @@ namespace Employee.Controllers
         
         public JsonResult EditEmployee(int id)
         {
-            
+            try
+            {
                 var db = new DatabaseConn();
                 Employee.Models.Entity.Employee emp = db.Edit(id);
 
@@ -89,9 +102,16 @@ namespace Employee.Controllers
                         emp.Country,
                         emp.ZipCode,
                         emp.DeptId
-                    }
+                    },
+                    success=true
                 };
                 return Json(result, JsonRequestBehavior.AllowGet);
+            }
+            catch(Exception ex) 
+            {
+                return Json(new {success=false,message=ex.Message}, JsonRequestBehavior.AllowGet);
+            }
+                
 
                 //return Json(new { data=emp},JsonRequestBehavior.AllowGet);
             
@@ -134,7 +154,7 @@ namespace Employee.Controllers
                 emp.DeleteEmployee(id);
                 return Json(new { success = true }, JsonRequestBehavior.AllowGet);
             }
-            catch(SqlException ex)
+            catch(Exception ex)
             {
                 return Json(new { success = false, message = ex.Message });
             }
