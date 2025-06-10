@@ -107,7 +107,7 @@
             e.preventDefault();
 
             const form = $(this);
-            const actionUrl = form.attr('action'); // Get dynamic action (Add or Update)
+            const actionUrl = form.attr('action');
 
             $.ajax({
                 url: actionUrl,
@@ -125,7 +125,7 @@
                             $(`span[data-valmsg-for="${err.Field}"]`).text(err.Error);
                         });
                     } else {
-                        alert('An unexpected error occurred.');
+                        alert('Error: ' + response.message);
                     }
                 },
                 error: function () {

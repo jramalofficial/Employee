@@ -1,4 +1,5 @@
 ﻿using Employee.Models;
+using System;
 using System.Linq;
 using System.Web.Configuration;
 using System.Web.Mvc;
@@ -15,6 +16,7 @@ namespace Employee.Controllers
         }
         public JsonResult GetAll()
         {
+
             
             var employees = emp.GetAllEmployee();
             return Json(new { data = employees }, JsonRequestBehavior.AllowGet);
@@ -32,8 +34,15 @@ namespace Employee.Controllers
         {
             if (ModelState.IsValid)
             {
-                emp.SaveEmployee(employee);  
-                return Json(new { success = true });
+                try
+                {
+                    emp.SaveEmployee(employee);
+                    return Json(new { success = true });
+                }
+                catch(Exception ex)
+                {
+                    return Json(new { success = false, message = ex.Message });
+                }
             }
             else
             {
@@ -76,7 +85,7 @@ namespace Employee.Controllers
             };
             return Json(result, JsonRequestBehavior.AllowGet);
 
-            //return Json(new { data=em p},JsonRequestBehavior.AllowGet);
+            //return Json(new { data=emp},JsonRequestBehavior.AllowGet);
         }
 
         [HttpPost]
@@ -84,9 +93,16 @@ namespace Employee.Controllers
         {
             if (ModelState.IsValid)
             {
-                var db = new DatabaseConn();
-                db.UpdateEmployee(employee);
-                return Json(new { success = true });
+                try
+                {
+                    
+                    emp.UpdateEmployee(employee);
+                    return Json(new { success = true });
+                }
+                catch (Exception ex)
+                {
+                    return Json(new { success = false, message = ex.Message });
+                }
             }
             else
             {
@@ -101,8 +117,8 @@ namespace Employee.Controllers
         [HttpPost]
         public JsonResult Delete(int id)
         {
-            var db = new DatabaseConn();
-            db.DeleteEmployee(id);
+            
+            emp.DeleteEmployee(id);
             return Json(new {success=true},JsonRequestBehavior.AllowGet);
         }
     }
