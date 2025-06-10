@@ -19,8 +19,7 @@ namespace Employee.Models
         {
             List<Employee.Models.Entity.Employee> employees = new List<Employee.Models.Entity.Employee>();
 
-            try
-            {
+           
                 
                 using (SqlConnection connection = new SqlConnection(ConnectionStrings))
                 {
@@ -51,25 +50,21 @@ namespace Employee.Models
 
                         }
                     }
+                    
 
                 }
-                
+                return employees;
 
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.Message);
-            }
-            return employees;
+
+          
+            
 
 
         }
         public List<Department> GetDepartments()
         {
             List<Department> departments = new List<Department>();
-            try
-            {
-                
+           
 
                 using (SqlConnection con = new SqlConnection(ConnectionStrings))
                 {
@@ -92,13 +87,10 @@ namespace Employee.Models
 
                     }
                 }
-                
-            }
-            catch (Exception ex) 
-            {
-                Console.WriteLine(ex.Message);
-            }
-            return departments;
+                return departments;
+
+          
+
         }
         
         public void SaveEmployee(Employee.Models.Entity.Employee employee)
@@ -132,9 +124,9 @@ namespace Employee.Models
 
                 }
             }
-            catch (Exception ex)
+            catch (SqlException ex)
             {
-                Console.WriteLine(ex.Message);
+                throw new Exception("Database Error while adding employee", ex);
             }
 
 
@@ -143,8 +135,7 @@ namespace Employee.Models
         public Employee.Models.Entity.Employee Edit(int id)
         {
             Employee.Models.Entity.Employee employee = null;
-            try
-            {
+            
                 
                 using (SqlConnection con = new SqlConnection(ConnectionStrings))
                 {
@@ -182,13 +173,9 @@ namespace Employee.Models
                     }
 
                 }
-                
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.Message);
-            }
-            return employee;
+                return employee;
+
+            
 
         }
 
@@ -228,7 +215,7 @@ namespace Employee.Models
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.Message);
+                throw new Exception("Database Error while Updating employee", ex);
             }
             
         }
@@ -250,9 +237,9 @@ namespace Employee.Models
                     }
                 }
             }
-            catch (Exception ex)
+            catch (SqlException ex)
             {
-                Console.WriteLine(ex.Message);
+                throw;
 
             }
         }

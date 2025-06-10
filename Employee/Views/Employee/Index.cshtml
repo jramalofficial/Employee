@@ -12,13 +12,11 @@
 
 
     <link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.min.css" />
-
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
     <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
 
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" />
-
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 
 </head>
@@ -54,8 +52,9 @@
             $('#addEmployeeForm').attr('action', '/Employee/Add');
             $('#saveEmployeeBtn').text('Save');
             $('#employeeId').val('');
-
+            $('.field-validation-error').text('');
         });
+
         
 
 
@@ -90,6 +89,7 @@
         });
 
         function editEmployee(Empid) {
+            
             $.ajax(
                 {
                     url: '/Employee/EditEmployee',
@@ -140,9 +140,13 @@
                 type: 'POST',
                 data: { id: Empid },
                 success: function (response) {
+                    
                     if (response.success) {
                         alert("Employee deleted successfully");
                         $('#employeeTable').DataTable().ajax.reload();
+                    }
+                    else {
+                        alert('Error: ' + response.message);
                     }
                 },
                 error: function () {

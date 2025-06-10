@@ -19,6 +19,7 @@ namespace Employee.Models.Entity
 
         [Required(ErrorMessage ="Last Name requried")]
         public string LastName { get; set; }
+
         [Required(ErrorMessage = "Department is required")]
         public int DeptId { get; set; }
 
