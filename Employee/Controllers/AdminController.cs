@@ -63,7 +63,11 @@ namespace Employee.Controllers
         }
 
 
-
+        public ActionResult Logout()
+        {
+            Session.Clear();
+            return RedirectToAction("Login","Admin");
+        }
        
 
     }

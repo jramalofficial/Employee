@@ -24,6 +24,11 @@
     @Html.Partial("_AddEmployeeModal");
 
     <div class="container">
+        <div class="container mt-3 text-right">
+            <a href="@Url.Action("Logout", "Admin")" class="btn btn-danger">
+                Logout
+            </a>
+        </div>
         <h2>Employees</h2>
         <button class="btn btn-success mb-3" data-toggle="modal" data-target="#addEmployeeModal"> ADD Employee</button>
         <table id="employeeTable" class="display">
