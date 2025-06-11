@@ -13,7 +13,11 @@ namespace Employee.Controllers
         
         DatabaseConn db = new DatabaseConn();
         public ActionResult Index()
-        {      
+        {
+            if (Session["Email"] == null)
+            {
+                return RedirectToAction("Login","Admin");
+            }
             return View();
         }
 
