@@ -26,8 +26,14 @@ namespace Employee.Models
             {
                 using (SqlCommand cmd = new SqlCommand("ValidEmail", conn))
                 {
-                    cmd.CommandType = System.Data.CommandType.StoredProcedure;
-                    cmd.Parameters.AddWithValue("@email", email);
+                    var jsonData = new
+                    {
+                        email = email
+                    };
+                    string jsonString = new JavaScriptSerializer().Serialize(jsonData);
+                    cmd.CommandType = CommandType.StoredProcedure;        
+                    cmd.Parameters.AddWithValue("@json", jsonString);
+
                     conn.Open();
                     int count = (int)cmd.ExecuteScalar();
                     System.Diagnostics.Debug.WriteLine("Email count: " + count);
@@ -48,7 +54,7 @@ namespace Employee.Models
                     {
                         username = username,
                         email = email,
-                        password = password // already hashed before calling this
+                        password = password 
                     };
                     cmd.CommandType = CommandType.StoredProcedure;
                     string jsonString = new JavaScriptSerializer().Serialize(jsonData);
@@ -75,10 +81,17 @@ namespace Employee.Models
         {
             using(SqlConnection conn=new SqlConnection(ConnectionStrings))
             {
-                using (SqlCommand cmd= new SqlCommand("getEmail",conn))
+                using (SqlCommand cmd= new SqlCommand("getPassword",conn))
                 {
-                    cmd.CommandType= CommandType.StoredProcedure;
-                    cmd.Parameters.AddWithValue("@email",email);
+                    var jsonData = new
+                    {
+                     
+                        email = email,
+                        
+                    };
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    string jsonString = new JavaScriptSerializer().Serialize(jsonData);
+                    cmd.Parameters.AddWithValue("@json", jsonString);
 
                     conn.Open();
                     string storedPassword=cmd.ExecuteScalar()?.ToString();
@@ -98,15 +111,22 @@ namespace Employee.Models
         {
             using (SqlConnection conn=new SqlConnection(ConnectionStrings))
             {
-                using (SqlCommand cmd=new SqlCommand("getEmail",conn)) 
-                { 
+                using (SqlCommand cmd=new SqlCommand("getPassword",conn)) 
+                {
+                    var jsonData = new
+                    {
+
+                        email = email,
+
+                    };
                     cmd.CommandType = CommandType.StoredProcedure;
-                    cmd.Parameters.AddWithValue("@email", email);
-
+                    string jsonString = new JavaScriptSerializer().Serialize(jsonData);
+                    cmd.Parameters.AddWithValue("@json", jsonString);
+ 
                     conn.Open();
-
-                   
+        
                     string storedPassword = cmd.ExecuteScalar()?.ToString();
+
                     if (!VerifyPassword(currentPassword, storedPassword))
                     {
                           return false;
@@ -126,10 +146,15 @@ namespace Employee.Models
             {
                 using (SqlCommand cmd = new SqlCommand("updateAdminPassword", conn))
                 {
+                    
+                    var jsonData = new
+                    {
+                        email = email,
+                        password = HashPassword(newPassword),
+                    };
                     cmd.CommandType = CommandType.StoredProcedure;
-                    cmd.Parameters.AddWithValue("@email", email);
-                    string Password = HashPassword(newPassword);
-                    cmd.Parameters.AddWithValue("@password",Password);
+                    string jsonString = new JavaScriptSerializer().Serialize(jsonData);
+                    cmd.Parameters.AddWithValue("@json",jsonString);
                     conn.Open();
                     cmd.ExecuteNonQuery();
                 }

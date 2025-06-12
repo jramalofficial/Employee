@@ -1,9 +1,10 @@
-﻿using System;
+﻿using Employee.Models.Entity;
+using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
 using System.Data.SqlClient;
-using Employee.Models.Entity;
+using System.Web.Script.Serialization;
 
 
 
@@ -25,7 +26,7 @@ namespace Employee.Models
                 {
                     using (SqlCommand cmd = new SqlCommand("selectTable", connection))
                     {
-                        cmd.CommandType = System.Data.CommandType.StoredProcedure;
+                        cmd.CommandType = CommandType.StoredProcedure;
                         connection.Open();
                         using (SqlDataReader reader = cmd.ExecuteReader())
                         {
@@ -93,21 +94,25 @@ namespace Employee.Models
                 using (SqlConnection con = new SqlConnection(ConnectionStrings))
                 {
                     using (SqlCommand cmd = new SqlCommand("addEmployee", con))
-                    {
+                    {                    
+                        var jsonData = new
+                        {
+                            FirstName = employee.FirstName,
+                            MiddleName = employee.MiddleName ?? (object)DBNull.Value,
+                            LastName = employee.LastName,
+                            DeptId = employee.DeptId,
+                            Dob = employee.Dob.ToString("yyyy-MM-dd"),
+                            Email = employee.Email,
+                            Phone = employee.Phone,
+                            StreetAddress = employee.StreetAddress,
+                            City = employee.City,
+                            State = employee.State,
+                            Country = employee.Country,
+                            ZipCode = employee.ZipCode
+                        };
                         cmd.CommandType = CommandType.StoredProcedure;
-
-                        cmd.Parameters.AddWithValue("@FirstName", employee.FirstName);
-                        cmd.Parameters.AddWithValue("@MiddleName", employee.MiddleName ?? (object)DBNull.Value);
-                        cmd.Parameters.AddWithValue("@LastName", employee.LastName);
-                        cmd.Parameters.AddWithValue("@DeptId", employee.DeptId);
-                        cmd.Parameters.AddWithValue("@Dob", employee.Dob);
-                        cmd.Parameters.AddWithValue("@Email", employee.Email);
-                        cmd.Parameters.AddWithValue("@Phone", employee.Phone);
-                        cmd.Parameters.AddWithValue("@StreetAddress", employee.StreetAddress);
-                        cmd.Parameters.AddWithValue("@City", employee.City);
-                        cmd.Parameters.AddWithValue("@State", employee.State);
-                        cmd.Parameters.AddWithValue("@Country", employee.Country);
-                        cmd.Parameters.AddWithValue("@ZipCode", employee.ZipCode);
+                        string jsonString = new JavaScriptSerializer().Serialize(jsonData);
+                        cmd.Parameters.AddWithValue("@json", jsonString);
                         con.Open();
                         cmd.ExecuteNonQuery();
                     }
@@ -115,11 +120,9 @@ namespace Employee.Models
             }
             catch (SqlException ex)
             {
-                throw new Exception("Database Error while adding employee", ex);
+                throw new Exception(ex.Message);
             }
         }
-
-
 
         public Employee.Models.Entity.Employee Edit(int id)
         {
@@ -131,8 +134,12 @@ namespace Employee.Models
                     using (SqlCommand cmd = new SqlCommand("selectEmployeeWithId", con))
                     {
                         cmd.CommandType = CommandType.StoredProcedure;
-
-                        cmd.Parameters.AddWithValue("@Id", id);
+                        var jsonData = new {
+                            Id=id 
+                        };
+                        cmd.CommandType = CommandType.StoredProcedure;
+                        string jsonString = new JavaScriptSerializer().Serialize(jsonData);
+                        cmd.Parameters.AddWithValue("@json", jsonString);
                         con.Open();
                         using (SqlDataReader reader = cmd.ExecuteReader())
                         {
@@ -175,21 +182,25 @@ namespace Employee.Models
                 {
                     using (SqlCommand cmd = new SqlCommand("updateEmployee", con))
                     {
+                        var jsonData = new
+                        {
+                            Id = employee.Id,
+                            FirstName = employee.FirstName,
+                            MiddleName = employee.MiddleName ?? (object)DBNull.Value,
+                            LastName = employee.LastName,
+                            Dob = employee.Dob.ToString("yyyy-MM-dd"),
+                            DeptId = employee.DeptId,
+                            Email = employee.Email,
+                            Phone = employee.Phone,
+                            StreetAddress = employee.StreetAddress,
+                            City = employee.City,
+                            State = employee.State,
+                            Country = employee.Country,
+                            ZipCode = employee.ZipCode
+                        };
                         cmd.CommandType = CommandType.StoredProcedure;
-
-                        cmd.Parameters.AddWithValue("@Id", employee.Id);
-                        cmd.Parameters.AddWithValue("@FirstName", employee.FirstName);
-                        cmd.Parameters.AddWithValue("@MiddleName", employee.MiddleName ?? (object)DBNull.Value);
-                        cmd.Parameters.AddWithValue("@LastName", employee.LastName);
-                        cmd.Parameters.AddWithValue("@DeptId", employee.DeptId);
-                        cmd.Parameters.AddWithValue("@Dob", employee.Dob);
-                        cmd.Parameters.AddWithValue("@Email", employee.Email);
-                        cmd.Parameters.AddWithValue("@Phone", employee.Phone);
-                        cmd.Parameters.AddWithValue("@StreetAddress", employee.StreetAddress);
-                        cmd.Parameters.AddWithValue("@City", employee.City);
-                        cmd.Parameters.AddWithValue("@State", employee.State);
-                        cmd.Parameters.AddWithValue("@Country", employee.Country);
-                        cmd.Parameters.AddWithValue("@ZipCode", employee.ZipCode);
+                        string jsonString = new JavaScriptSerializer().Serialize(jsonData);
+                        cmd.Parameters.AddWithValue("@json", jsonString);
                         con.Open();
                         cmd.ExecuteNonQuery();
                     }
@@ -202,8 +213,6 @@ namespace Employee.Models
         }
 
 
-
-
         public void DeleteEmployee(int employeeId)
         {
             try
@@ -212,9 +221,14 @@ namespace Employee.Models
                 {
                     using (SqlCommand cmd = new SqlCommand("deleteEmployee", con))
                     {
+                        var jsonData = new
+                        {
+                            Id = employeeId
+                        };
                         cmd.CommandType = CommandType.StoredProcedure;
 
-                        cmd.Parameters.AddWithValue("@Id", employeeId);
+                        string jsonString = new JavaScriptSerializer().Serialize(jsonData);
+                        cmd.Parameters.AddWithValue("@json", jsonString);
                         con.Open();
                         cmd.ExecuteNonQuery();
                     }
@@ -223,7 +237,6 @@ namespace Employee.Models
             catch (SqlException ex)
             {
                 throw new Exception("Error occured while delete from database", ex);
-
             }
         }
     }
