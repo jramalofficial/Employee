@@ -10,6 +10,7 @@ using System.Text;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.UI.WebControls.WebParts;
+using System.Web.Script.Serialization;
 
 namespace Employee.Models
 {
@@ -41,12 +42,17 @@ namespace Employee.Models
         {
             using (SqlConnection conn=new SqlConnection(ConnectionStrings))
             {
-                using (SqlCommand cmd = new SqlCommand("insertAdmin",conn))
+                using (SqlCommand cmd = new SqlCommand("insertAdmin_JSON",conn))
                 {
+                    var jsonData = new
+                    {
+                        username = username,
+                        email = email,
+                        password = password // already hashed before calling this
+                    };
                     cmd.CommandType = CommandType.StoredProcedure;
-                    cmd.Parameters.AddWithValue("@username",username);
-                    cmd.Parameters.AddWithValue("@email", email);
-                    cmd.Parameters.AddWithValue("@password", password);
+                    string jsonString = new JavaScriptSerializer().Serialize(jsonData);
+                    cmd.Parameters.AddWithValue("@json", jsonString);
 
                     conn.Open();
                     cmd.ExecuteNonQuery();
@@ -86,6 +92,48 @@ namespace Employee.Models
         {
             string inputHash=HashPassword(inputpassword);
             return inputHash==storedPassword;
+        }
+
+        public bool ChangePassword(string currentPassword,string newPassword,string email) 
+        {
+            using (SqlConnection conn=new SqlConnection(ConnectionStrings))
+            {
+                using (SqlCommand cmd=new SqlCommand("getEmail",conn)) 
+                { 
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    cmd.Parameters.AddWithValue("@email", email);
+
+                    conn.Open();
+
+                   
+                    string storedPassword = cmd.ExecuteScalar()?.ToString();
+                    if (!VerifyPassword(currentPassword, storedPassword))
+                    {
+                          return false;
+                    }
+                    savePassword(newPassword,email);
+                        
+                      
+                    
+                }
+            }
+            return true;
+        }
+
+        public void savePassword(string newPassword,string email)
+        {
+            using (SqlConnection conn = new SqlConnection(ConnectionStrings))
+            {
+                using (SqlCommand cmd = new SqlCommand("updateAdminPassword", conn))
+                {
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    cmd.Parameters.AddWithValue("@email", email);
+                    string Password = HashPassword(newPassword);
+                    cmd.Parameters.AddWithValue("@password",Password);
+                    conn.Open();
+                    cmd.ExecuteNonQuery();
+                }
+            }
         }
     }
 }

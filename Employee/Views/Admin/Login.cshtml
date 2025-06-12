@@ -29,6 +29,12 @@
                             @ViewBag.LoginError
                         </div>
                     }
+                    @if (!string.IsNullOrEmpty(ViewBag.Error as String))
+                    {
+                        <div class="alert alert-danger text-center">
+                            @ViewBag.Error
+                        </div>
+                    }
                     <div class="card-body">
                         <form action="/Admin/Login" method="post">
 
@@ -42,6 +48,8 @@
                                 <label for="password">Password</label>
                                 <input type="password" class="form-control" id="password" name="password" placeholder="Enter password" required />
                             </div>
+                            <input type="hidden" name="returnUrl" value="@ViewBag.ReturnUrl" />
+
 
                             <button type="submit" class="btn btn-primary btn-block">LogIn</button>
                         </form>

@@ -24,10 +24,21 @@
     @Html.Partial("_AddEmployeeModal");
 
     <div class="container">
+        @if (TempData["Message"] != null)
+        {
+            var messageType = TempData["MessageType"] as string;
+            var alertClass = messageType == "success" ? "alert-success" : "alert-danger";
+            <div class="alert @alertClass">
+                @TempData["Message"]
+            </div>
+        }
+
         <div class="container mt-3 text-right">
-            <a href="@Url.Action("Logout", "Admin")" class="btn btn-danger">
+            <a href="@Url.Action("Logout", "Employee")" class="btn btn-danger">
                 Logout
             </a>
+            <a href="@Url.Action("ForgetPassword", "Admin")" class="btn btn-warning">Change Password</a>
+
         </div>
         <h2>Employees</h2>
         <button class="btn btn-success mb-3" data-toggle="modal" data-target="#addEmployeeModal"> ADD Employee</button>

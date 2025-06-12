@@ -5,19 +5,23 @@ using System.Data.SqlClient;
 using System.Linq;
 using System.Web.Configuration;
 using System.Web.Mvc;
+using System.Web.Security;
 
 namespace Employee.Controllers
 {
+    
     public class EmployeeController : Controller
     {
         
         DatabaseConn db = new DatabaseConn();
+
+        [Authorize]
         public ActionResult Index()
         {
-            if (Session["Email"] == null)
+            /*if (Session["Email"] == null)
             {
                 return RedirectToAction("Login","Admin");
-            }
+            }*/
             return View();
         }
 
@@ -164,5 +168,15 @@ namespace Employee.Controllers
                 return Json(new { success = false, message = ex.Message });
             }                      
         }
+
+        public ActionResult Logout()
+        {
+            FormsAuthentication.SignOut();
+            return RedirectToAction("Login", "Admin");
+        }
     }
+
+
+
+
 }
