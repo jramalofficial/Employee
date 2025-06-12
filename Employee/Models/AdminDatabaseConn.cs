@@ -150,7 +150,7 @@ namespace Employee.Models
                     var jsonData = new
                     {
                         email = email,
-                        password = HashPassword(newPassword),
+                        password = HashPassword(newPassword)
                     };
                     cmd.CommandType = CommandType.StoredProcedure;
                     string jsonString = new JavaScriptSerializer().Serialize(jsonData);
